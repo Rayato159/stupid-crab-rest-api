@@ -1,0 +1,16 @@
+[package]
+name = "axum-stupid-api"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[target.x86_64-pc-windows-gnu]
+linker = "C:/msys64/ucrt64/bin/gcc.exe"
+ar = "C:/msys64/ucrt64/bin/ar.exe"
+
+[dependencies]
+axum = "0.6"
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+tokio = { version = "1", features = ["full"] }
