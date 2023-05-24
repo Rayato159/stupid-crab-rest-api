@@ -1,7 +1,7 @@
 use std::net::SocketAddr;
 use axum::{
     http::{Method},
-    routing::get,
+    routing::{get, post},
     response::{Json, IntoResponse},
     Router,
 };
@@ -33,6 +33,7 @@ pub async fn start() {
                     ]
                 ),
         )
+        .route("/", post(products::handlers::insert_product))
         .route("/:product_id", get(products::handlers::find_one_product));
     
     let addr = SocketAddr::from(([0, 0, 0, 0], 3000));
