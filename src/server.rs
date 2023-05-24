@@ -1,7 +1,7 @@
 use std::net::SocketAddr;
 use axum::{
     http::{Method},
-    routing::{get, post},
+    routing::{get, post, patch, delete},
     response::{Json, IntoResponse},
     Router,
 };
@@ -33,8 +33,11 @@ pub async fn start() {
                     ]
                 ),
         )
-        .route("/", post(products::handlers::insert_product))
-        .route("/:product_id", get(products::handlers::find_one_product));
+        .route("/products", post(products::handlers::insert_product))
+        .route("/products", patch(products::handlers::update_product))
+        .route("/products", get(products::handlers::find_products))
+        .route("/:product_id/products", get(products::handlers::find_one_product))
+        .route("/:product_id/products", delete(products::handlers::delete_product));
     
     let addr = SocketAddr::from(([0, 0, 0, 0], 3000));
     println!("server is running on -> {:?}", addr);

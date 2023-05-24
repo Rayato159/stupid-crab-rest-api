@@ -12,3 +12,13 @@ pub struct Product {
     pub title: String,
     pub description: String,
 }
+
+impl Product {
+    pub fn new() -> Product {
+        Product {
+            id: 0,
+            title: String::from(""),
+            description: String::from(""),
+        }
+    }
+}
