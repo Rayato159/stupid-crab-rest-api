@@ -1,7 +1,6 @@
 use super::entities::{Result, InsertItemReq, ItemBson, Item};
 use bson::{from_document, Bson};
 use mongodb::Cursor;
-use mongodb::results::InsertOneResult;
 use mongodb::{Client, options::ClientOptions, Database};
 use mongodb::bson::{doc, Document};
 use bson::oid::ObjectId;
