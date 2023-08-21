@@ -1,6 +1,5 @@
 use axum::{
     response::{Json, IntoResponse},
-    extract::{Path},
     http::StatusCode,
 };
 use serde_json::json;
@@ -9,13 +8,30 @@ use bson::oid::ObjectId;
 use super::entities::{Item, Result, InsertItemReq};
 use super::repositories;
 
+pub async fn find_items() -> impl IntoResponse {
+    let items: Vec<Item> = repositories::find_items().await;
+    (StatusCode::OK, Json(items).into_response())
+}
+
 pub async fn insert_one_item(req: InsertItemReq) -> impl IntoResponse {
-    match repositories::insert_one_item(req).await {
-        Result::Ok(msg) =>  (
+    let result_object_id = repositories::insert_one_item(req).await;
+    let item_id: ObjectId = match result_object_id {
+        Result::Ok(id) => id,
+        Result::Err(_) => return {
+            (
+                StatusCode::BAD_REQUEST,
+                Json(json!({
+                    "status": 400,
+                    "message": "insert item failed",
+                })).into_response()
+            )
+        }
+    };
+
+    match repositories::find_one_item(item_id).await {
+        Result::Ok(item) =>  (
             StatusCode::OK,
-            Json(json!({
-                "message": msg,
-            })).into_response()
+            Json(item).into_response()
         ),
         Result::Err(e) => {
             (

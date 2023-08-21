@@ -4,9 +4,9 @@ use axum::response::{Json, IntoResponse};
 use super::entities::InsertItemReq;
 use super::usecases;
 
-// pub async fn find_products() -> impl IntoResponse {
-//     (StatusCode::OK, Json(usecases::find_products()).into_response())
-// }
+pub async fn find_items() -> impl IntoResponse {
+    usecases::find_items().await
+}
 
 pub async fn find_one_item(Path(item_id): Path<String>) -> impl IntoResponse {
     usecases::find_one_item(item_id).await

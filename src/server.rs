@@ -34,9 +34,9 @@ pub async fn start() {
                 ),
         )
         .route("/item", post(items::handlers::insert_one_item))
-        .route("/:item_id/item", get(items::handlers::find_one_item));
-        // .route("/products", patch(products::handlers::update_product))
-        // .route("/products", get(products::handlers::find_products))
+        .route("/:item_id/item", get(items::handlers::find_one_item))
+        // .route("/item", patch(items::handlers::update_item))
+        .route("/item", get(items::handlers::find_items));
         // .route("/:product_id/products", delete(products::handlers::delete_product));
     
     let addr = SocketAddr::from(([0, 0, 0, 0], 3000));

@@ -1,9 +1,10 @@
 use super::entities::{Result, InsertItemReq, ItemBson, Item};
-use bson::from_document;
+use bson::{from_document, Bson};
+use mongodb::Cursor;
+use mongodb::results::InsertOneResult;
 use mongodb::{Client, options::ClientOptions, Database};
 use mongodb::bson::{doc, Document};
 use bson::oid::ObjectId;
-use serde::Deserialize;
 
 pub async fn dbconnect() -> mongodb::error::Result<Database> {
     // Parse a connection string into an options struct.
@@ -21,7 +22,59 @@ pub async fn dbconnect() -> mongodb::error::Result<Database> {
     Ok(db)
 }
 
-pub async fn insert_one_item(req: InsertItemReq) -> Result<String, String> {
+pub async fn find_items() -> Vec<Item> {
+    let db_conn = dbconnect().await;
+
+    let db: Database;
+    match db_conn {
+        Ok(r) => db = r,
+        Err(e) => panic!("Error: connect to db failed {:?}", e),
+    };
+
+    let col = db.collection::<Document>("items");
+
+    let cursor_result = col.find(doc! {}, None).await;
+    let mut cursor: Cursor<Document>;
+    match cursor_result {
+        Ok(r) => cursor = r,
+        Err(e) => {
+            println!("Error: {:?}", e);
+            return Vec::new()
+        }
+    }
+
+    let mut items: Vec<Item> = Vec::new(); // Initialize an empty vector for items
+    while let Ok(next) = cursor.advance().await {
+        if !next {
+            break
+        }
+
+        let item_doc = match cursor.deserialize_current().ok() {
+            Some(doc) => doc,
+            None => break
+        };
+        let item: ItemBson = match from_document(item_doc).map_err(|e| format!("Error: deserializing document: {:?}", e)) {
+            Ok(i) => i,
+            Err(e) => {
+                println!("Error: {:?}", e);
+                return Vec::new()
+            }
+        };
+
+        items.push(Item {
+            _id: item._id.to_hex(),
+            name: item.name,
+            description: item.description,
+            damage: item.damage,
+            level_required: item.level_required,
+            price: item.price,
+        });
+    }
+
+    items
+}
+
+pub async fn insert_one_item(req: InsertItemReq) -> Result<ObjectId, String> {
     let db_conn = dbconnect().await;
 
     let db: Database;
@@ -40,9 +93,14 @@ pub async fn insert_one_item(req: InsertItemReq) -> Result<String, String> {
         "price": req.price
     }, None).await;
 
-    match result {
-        Ok(r) => Result::Ok(format!("Insert one: {:?}", r)),
-        Err(e) => Result::Err(format!("Error: {:?}", e))
+    let inserted_id_bson: Bson = match result {
+        Ok(r) => r.inserted_id,
+        Err(e) => return Result::Err(format!("Error: {:?}", e))
+    };
+
+    match inserted_id_bson.as_object_id() {
+        Some(id) => Result::Ok(id),
+        None => Result::Err(format!("Error: insert one item failed"))
     }
 }
 
@@ -72,7 +130,7 @@ pub async fn find_one_item(item_id: ObjectId) -> Result<Item, String> {
     };
 
     Result::Ok(Item {
-        _id: item._id.to_string(),
+        _id: item._id.to_hex(),
         name: item.name,
         description: item.description,
         damage: item.damage,
