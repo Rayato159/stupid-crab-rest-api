@@ -1,11 +1,11 @@
 use std::net::SocketAddr;
 use axum::{
-    http::{Method},
+    http::Method,
     routing::{get, post, patch, delete},
     response::{Json, IntoResponse},
     Router,
 };
-use serde_json::{json};
+use serde_json::json;
 use tower_http::cors::{CorsLayer, Origin};
 
 pub mod products;

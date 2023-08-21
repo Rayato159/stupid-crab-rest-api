@@ -13,6 +13,14 @@ pub struct Product {
     pub description: String,
 }
 
+#[derive(Debug)]
+#[derive(Serialize)]
+#[derive(Deserialize)]
+pub struct InsertProductReq {
+    pub title: String,
+    pub description: String,
+}
+
 impl Product {
     pub fn new() -> Product {
         Product {

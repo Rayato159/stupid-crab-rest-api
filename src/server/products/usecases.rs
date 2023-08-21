@@ -1,5 +1,7 @@
-use super::entities::{Product, Result};
-use super::repositories::{products_db};
+use super::entities::{Product, Result, InsertProductReq};
+use super::repositories::{products_db, dbconnect, insert_one_product};
+use mongodb::bson::{doc, Document};
+use mongodb::Database;
 
 pub fn find_products() -> Vec<Product> {
     products_db()
@@ -16,14 +18,8 @@ pub fn find_one_product(product_id: i32) -> Result<Product, String> {
     Result::Err(format!("product_id: {} not found", product_id))
 }
 
-pub fn insert_product(mut req: Product) -> Result<Product, String> {
-    if req.title == "" {
-        return Result::Err(format!("insert product {:?} failed", req))
-    }
-
-    let latest_id = products_db().len();
-    req.id = (latest_id + 1) as i32;
-    Result::Ok(req)
+pub async fn insert_product(mut req: InsertProductReq) -> Result<String, String> {
+    insert_one_product(req).await
 }
 
 pub fn update_product(req: Product) -> Result<Product, String> {
