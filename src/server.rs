@@ -8,7 +8,7 @@ use axum::{
 use serde_json::json;
 use tower_http::cors::{CorsLayer, Origin};
 
-pub mod products;
+pub mod items;
 
 #[tokio::main]
 pub async fn start() {
@@ -33,11 +33,11 @@ pub async fn start() {
                     ]
                 ),
         )
-        .route("/products", post(products::handlers::insert_product))
-        .route("/products", patch(products::handlers::update_product))
-        .route("/products", get(products::handlers::find_products))
-        .route("/:product_id/products", get(products::handlers::find_one_product))
-        .route("/:product_id/products", delete(products::handlers::delete_product));
+        .route("/item", post(items::handlers::insert_one_item))
+        .route("/:item_id/item", get(items::handlers::find_one_item));
+        // .route("/products", patch(products::handlers::update_product))
+        // .route("/products", get(products::handlers::find_products))
+        // .route("/:product_id/products", delete(products::handlers::delete_product));
     
     let addr = SocketAddr::from(([0, 0, 0, 0], 3000));
     println!("server is running on -> {:?}", addr);
