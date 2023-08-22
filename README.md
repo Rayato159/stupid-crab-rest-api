@@ -77,3 +77,9 @@ db.items.insertMany([
   }
 ])
 ```
+
+<h2>Start Project with Cargo</h2>
+
+```bash
+cargo run
+```
