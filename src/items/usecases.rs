@@ -21,7 +21,6 @@ pub async fn insert_one_item(req: InsertItemReq) -> impl IntoResponse {
             (
                 StatusCode::BAD_REQUEST,
                 Json(json!({
-                    "status": 400,
                     "message": "insert item failed",
                 })).into_response()
             )
@@ -30,14 +29,13 @@ pub async fn insert_one_item(req: InsertItemReq) -> impl IntoResponse {
 
     match repositories::find_one_item(item_id).await {
         Result::Ok(item) =>  (
-            StatusCode::OK,
+            StatusCode::CREATED,
             Json(item).into_response()
         ),
         Result::Err(e) => {
             (
                 StatusCode::BAD_REQUEST,
                 Json(json!({
-                    "status": 400,
                     "message": e,
                 })).into_response()
             )
@@ -52,7 +50,6 @@ pub async fn find_one_item(item_id: String) -> impl IntoResponse {
             (
                 StatusCode::BAD_REQUEST,
                 Json(json!({
-                    "status": 400,
                     "message": "parse ObjectId failed",
                 })).into_response()
             )
@@ -68,7 +65,6 @@ pub async fn find_one_item(item_id: String) -> impl IntoResponse {
             (
                 StatusCode::BAD_REQUEST,
                 Json(json!({
-                    "status": 400,
                     "message": e,
                 })).into_response()
             )
@@ -93,14 +89,30 @@ pub async fn find_one_item(item_id: String) -> impl IntoResponse {
 //     Result::Err(format!("product_id {} not found", req.id))
 // }
 
-// pub fn delete_product(product_id: i32) -> Result<Vec<Item>, String> {
-//     let mut products = products_db();
+pub async fn delete_one_item(item_id: String) -> impl IntoResponse {
+    let item_object_id = match ObjectId::parse_str(item_id) {
+        Ok(id) => id,
+        Err(e) => {
+            println!("Error: delete one item failed: {:?}", e);
+            return (
+                StatusCode::BAD_REQUEST,
+                Json(json!({
+                    "message": "delete one item failed",
+                })).into_response()
+            )
+        }
+    };
 
-//     for (i, product) in products.iter().enumerate() {
-//         if product_id == product.id {
-//             products.remove(i);
-//             return Result::Ok(products)
-//         }
-//     }
-//     Result::Err(format!("product_id {} not found", product_id))
-// }
+    match repositories::delete_one_item(item_object_id).await {
+        Result::Ok(r) => (
+            StatusCode::OK,
+            Json(json!(r)).into_response()
+        ),
+        Result::Err(_) => (
+            StatusCode::BAD_REQUEST,
+            Json(json!({
+                "message": "delete one item failed",
+            })).into_response()
+        )
+    }
+}

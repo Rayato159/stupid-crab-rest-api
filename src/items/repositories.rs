@@ -1,6 +1,7 @@
 use super::entities::{Result, InsertItemReq, ItemBson, Item};
 use bson::{from_document, Bson};
 use mongodb::Cursor;
+use mongodb::results::DeleteResult;
 use mongodb::{Client, options::ClientOptions, Database};
 use mongodb::bson::{doc, Document};
 use bson::oid::ObjectId;
@@ -22,11 +23,8 @@ pub async fn dbconnect() -> mongodb::error::Result<Database> {
 }
 
 pub async fn find_items() -> Vec<Item> {
-    let db_conn = dbconnect().await;
-
-    let db: Database;
-    match db_conn {
-        Ok(r) => db = r,
+    let db = match dbconnect().await {
+        Ok(r) => r,
         Err(e) => panic!("Error: connect to db failed {:?}", e),
     };
 
@@ -74,11 +72,8 @@ pub async fn find_items() -> Vec<Item> {
 }
 
 pub async fn insert_one_item(req: InsertItemReq) -> Result<ObjectId, String> {
-    let db_conn = dbconnect().await;
-
-    let db: Database;
-    match db_conn {
-        Ok(r) => db = r,
+    let db = match dbconnect().await {
+        Ok(r) => r,
         Err(e) => panic!("Error: connect to db failed {:?}", e),
     };
 
@@ -104,11 +99,8 @@ pub async fn insert_one_item(req: InsertItemReq) -> Result<ObjectId, String> {
 }
 
 pub async fn find_one_item(item_id: ObjectId) -> Result<Item, String> {
-    let db_conn = dbconnect().await;
-
-    let db: Database;
-    match db_conn {
-        Ok(r) => db = r,
+    let db = match dbconnect().await {
+        Ok(r) => r,
         Err(e) => panic!("Error: connect to db failed {:?}", e),
     };
 
@@ -136,4 +128,21 @@ pub async fn find_one_item(item_id: ObjectId) -> Result<Item, String> {
         level_required: item.level_required,
         price: item.price,
     })
+}
+
+pub async fn delete_one_item(item_id: ObjectId) -> Result<DeleteResult, String> {
+    let db = match dbconnect().await {
+        Ok(r) => r,
+        Err(e) => panic!("Error: connect to db failed {:?}", e),
+    };
+
+    let col = db.collection::<Document>("items");
+
+    match col.delete_one(doc! {"_id": item_id}, None).await {
+        Ok(r) => Result::Ok(r),
+        Err(e) => {
+            println!("Error: delete item failed: {:?}", e);
+            Result::Err(format!("Error: delete item failed"))
+        }
+    }
 }
