@@ -35,7 +35,7 @@ async fn main() {
         )
         .route("/item", post(items::handlers::insert_one_item))
         .route("/:item_id/item", get(items::handlers::find_one_item))
-        // .route("/item", patch(items::handlers::update_item))
+        .route("/:item_id/item", patch(items::handlers::update_one_item))
         .route("/item", get(items::handlers::find_items))
         .route("/:item_id/item", delete(items::handlers::delete_one_item));
     

@@ -1,7 +1,7 @@
 use super::entities::{Result, InsertItemReq, ItemBson, Item};
 use bson::{from_document, Bson};
 use mongodb::Cursor;
-use mongodb::results::DeleteResult;
+use mongodb::results::{DeleteResult, UpdateResult};
 use mongodb::{Client, options::ClientOptions, Database};
 use mongodb::bson::{doc, Document};
 use bson::oid::ObjectId;
@@ -128,6 +128,41 @@ pub async fn find_one_item(item_id: ObjectId) -> Result<Item, String> {
         level_required: item.level_required,
         price: item.price,
     })
+}
+
+pub async fn update_one_item(req: ItemBson) -> Result<UpdateResult, String> {
+    let db = match dbconnect().await {
+        Ok(r) => r,
+        Err(e) => panic!("Error: connect to db failed {:?}", e),
+    };
+
+    let col = db.collection::<Document>("items");
+
+    let mut updated_fields = doc! {};
+
+    if req.name != "" {
+        updated_fields.insert("name", req.name);
+    }
+    if req.description != "" {
+        updated_fields.insert("description", req.description);
+    }
+    if req.damage > 0 {
+        updated_fields.insert("damage", req.damage);
+    }
+    if req.level_required > 0 {
+        updated_fields.insert("level_required", req.level_required);
+    }
+    if req.price > 0 {
+        updated_fields.insert("price", req.price);
+    }
+
+    match col.update_one(doc! {"_id": req._id}, doc! {"$set": updated_fields}, None).await {
+        Ok(r) => Result::Ok(r),
+        Err(e) => {
+            println!("Error: update one item failed: {:?}", e);
+            Result::Err(format!("Error: update one item failed"))
+        }
+    }
 }
 
 pub async fn delete_one_item(item_id: ObjectId) -> Result<DeleteResult, String> {

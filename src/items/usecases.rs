@@ -5,7 +5,7 @@ use axum::{
 use serde_json::json;
 use bson::oid::ObjectId;
 
-use super::entities::{Item, Result, InsertItemReq};
+use super::entities::{Item, Result, InsertItemReq, ItemBson};
 use super::repositories;
 
 pub async fn find_items() -> impl IntoResponse {
@@ -72,22 +72,53 @@ pub async fn find_one_item(item_id: String) -> impl IntoResponse {
     }
 }
 
-// pub fn update_product(req: Item) -> Result<Item, String> {
-//     let products = products_db();
+pub async fn update_one_item(item_id: String, req: InsertItemReq) -> impl IntoResponse {
+    let item_object_id = match ObjectId::parse_str(item_id) {
+        Ok(id) => id,
+        Err(_) => return {
+            (
+                StatusCode::BAD_REQUEST,
+                Json(json!({
+                    "message": "parse ObjectId failed",
+                })).into_response()
+            )
+        }
+    };
 
-//     for mut product in products {
-//         if req.id == product.id {
-//             if req.title != String::from("") {
-//                 product.title = req.title
-//             }
-//             if req.description != String::from("") {
-//                 product.description = req.description
-//             }
-//             return Result::Ok(product)
-//         }
-//     }
-//     Result::Err(format!("product_id {} not found", req.id))
-// }
+    let item_to_update = ItemBson {
+        _id: item_object_id,
+        name: req.name,
+        description: req.description,
+        damage: req.damage,
+        level_required: req.level_required,
+        price: req.price
+    };
+
+    match repositories::update_one_item(item_to_update).await {
+        Result::Ok(r) => println!("{:?}", r),
+        Result::Err(_) => return (
+            StatusCode::BAD_REQUEST,
+            Json(json!({
+                "message": "update one item failed",
+            })).into_response()
+        )
+    }
+
+    match repositories::find_one_item(item_object_id).await {
+        Result::Ok(item) =>  (
+            StatusCode::OK,
+            Json(item).into_response()
+        ),
+        Result::Err(e) => {
+            (
+                StatusCode::BAD_REQUEST,
+                Json(json!({
+                    "message": e,
+                })).into_response()
+            )
+        }
+    }
+}
 
 pub async fn delete_one_item(item_id: String) -> impl IntoResponse {
     let item_object_id = match ObjectId::parse_str(item_id) {
