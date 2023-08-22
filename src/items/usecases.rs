@@ -4,6 +4,7 @@ use axum::{
 };
 use serde_json::json;
 use bson::oid::ObjectId;
+use tracing::info;
 
 use super::entities::{Item, Result, InsertItemReq, ItemBson};
 use super::repositories;
@@ -95,7 +96,7 @@ pub async fn update_one_item(item_id: String, req: InsertItemReq) -> impl IntoRe
     };
 
     match repositories::update_one_item(item_to_update).await {
-        Result::Ok(r) => println!("{:?}", r),
+        Result::Ok(r) => info!("{:?}", r),
         Result::Err(_) => return (
             StatusCode::BAD_REQUEST,
             Json(json!({
@@ -124,7 +125,7 @@ pub async fn delete_one_item(item_id: String) -> impl IntoResponse {
     let item_object_id = match ObjectId::parse_str(item_id) {
         Ok(id) => id,
         Err(e) => {
-            println!("Error: delete one item failed: {:?}", e);
+            info!("Error: delete one item failed: {:?}", e);
             return (
                 StatusCode::BAD_REQUEST,
                 Json(json!({

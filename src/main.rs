@@ -1,6 +1,6 @@
 use std::net::SocketAddr;
 use axum::{
-    http::Method,
+    http::{Method, StatusCode},
     routing::{get, post, patch, delete},
     response::{Json, IntoResponse},
     Router,
@@ -9,15 +9,23 @@ use serde_json::json;
 use tower_http::cors::{CorsLayer, Origin};
 
 pub mod items;
+pub mod config;
 
 #[tokio::main]
 async fn main() {
+    tracing_subscriber::fmt()
+        .with_max_level(tracing::Level::DEBUG)
+        .init();
+
     let app = Router::new()
         .route("/", get(|| async move {
-            Json(json!({
-                "app": "stupid-crab-rest-api",
-                "version": "v0.1.0",
-            })).into_response()
+            (
+                StatusCode::OK,
+                Json(json!({
+                    "app": "stupid-crab-rest-api",
+                    "version": "v0.1.0",
+                })).into_response()
+            )
         })).layer(
             CorsLayer::new()
                 .allow_origin(Origin::exact(

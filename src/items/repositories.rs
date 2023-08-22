@@ -2,25 +2,10 @@ use super::entities::{Result, InsertItemReq, ItemBson, Item};
 use bson::{from_document, Bson};
 use mongodb::Cursor;
 use mongodb::results::{DeleteResult, UpdateResult};
-use mongodb::{Client, options::ClientOptions, Database};
 use mongodb::bson::{doc, Document};
 use bson::oid::ObjectId;
-
-pub async fn dbconnect() -> mongodb::error::Result<Database> {
-    // Parse a connection string into an options struct.
-    let mut client_options = ClientOptions::parse("mongodb://root:123456@127.0.0.1:27017").await?;
-
-    // Manually set an option.
-    client_options.app_name = Some("My App".to_string());
-
-    // Get a handle to the deployment.
-    let client = Client::with_options(client_options)?;
-
-    // List the names of the databases in that deployment.
-    let db = client.database("crab_db");
-
-    Ok(db)
-}
+use tracing::info;
+use crate::config::database::dbconnect;
 
 pub async fn find_items() -> Vec<Item> {
     let db = match dbconnect().await {
@@ -35,7 +20,7 @@ pub async fn find_items() -> Vec<Item> {
     match cursor_result {
         Ok(r) => cursor = r,
         Err(e) => {
-            println!("Error: {:?}", e);
+            info!("Error: {:?}", e);
             return Vec::new()
         }
     }
@@ -53,7 +38,7 @@ pub async fn find_items() -> Vec<Item> {
         let item: ItemBson = match from_document(item_doc).map_err(|e| format!("Error: deserializing document: {:?}", e)) {
             Ok(i) => i,
             Err(e) => {
-                println!("Error: {:?}", e);
+                info!("Error: {:?}", e);
                 return Vec::new()
             }
         };
@@ -159,7 +144,7 @@ pub async fn update_one_item(req: ItemBson) -> Result<UpdateResult, String> {
     match col.update_one(doc! {"_id": req._id}, doc! {"$set": updated_fields}, None).await {
         Ok(r) => Result::Ok(r),
         Err(e) => {
-            println!("Error: update one item failed: {:?}", e);
+            info!("Error: update one item failed: {:?}", e);
             Result::Err(format!("Error: update one item failed"))
         }
     }
@@ -176,7 +161,7 @@ pub async fn delete_one_item(item_id: ObjectId) -> Result<DeleteResult, String> 
     match col.delete_one(doc! {"_id": item_id}, None).await {
         Ok(r) => Result::Ok(r),
         Err(e) => {
-            println!("Error: delete item failed: {:?}", e);
+            info!("Error: delete item failed: {:?}", e);
             Result::Err(format!("Error: delete item failed"))
         }
     }
