@@ -1,7 +1,7 @@
 use axum::extract::Path;
 use axum::response::{Json, IntoResponse};
 
-use super::entities::{InsertItemReq, Item};
+use super::entities::InsertItemReq;
 use super::usecases;
 
 pub async fn find_items() -> impl IntoResponse {
