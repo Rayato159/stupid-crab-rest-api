@@ -1,0 +1,373 @@
+{
+	"info": {
+		"_postman_id": "72d14d3b-8137-4115-994f-66f7bd71ac58",
+		"name": "axum-stupid-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18192292"
+	},
+	"item": [
+		{
+			"name": "find items",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/item",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"item"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "200 - ok",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/item",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"item"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "content-type",
+							"value": "application/json"
+						},
+						{
+							"key": "content-length",
+							"value": "792"
+						},
+						{
+							"key": "date",
+							"value": "Tue, 22 Aug 2023 06:17:00 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"_id\": \"64e386ec0ddcb727ecad9723\",\n        \"name\": \"Sword of Valor\",\n        \"description\": \"One-Handed Sword\",\n        \"damage\": 120,\n        \"level_required\": 30,\n        \"price\": 1500\n    },\n    {\n        \"_id\": \"64e386ec0ddcb727ecad9724\",\n        \"name\": \"Elven Bow\",\n        \"description\": \"Bow\",\n        \"damage\": 90,\n        \"level_required\": 25,\n        \"price\": 1200\n    },\n    {\n        \"_id\": \"64e386ec0ddcb727ecad9725\",\n        \"name\": \"Staff of Fire\",\n        \"description\": \"Staff\",\n        \"damage\": 105,\n        \"level_required\": 28,\n        \"price\": 1400\n    },\n    {\n        \"_id\": \"64e386ec0ddcb727ecad9726\",\n        \"name\": \"Dwarven Hammer\",\n        \"description\": \"Two-Handed Hammer\",\n        \"damage\": 160,\n        \"level_required\": 35,\n        \"price\": 1800\n    },\n    {\n        \"_id\": \"64e386ec0ddcb727ecad9727\",\n        \"name\": \"Assassin's Dagger\",\n        \"description\": \"Dagger\",\n        \"damage\": 80,\n        \"level_required\": 22,\n        \"price\": 1000\n    },\n    {\n        \"_id\": \"64e3bdb308f40771b1ff8e21\",\n        \"name\": \"Thunder Hammer\",\n        \"description\": \"One-Handed Hammer\",\n        \"damage\": 190,\n        \"level_required\": 35,\n        \"price\": 1900\n    }\n]"
+				}
+			]
+		},
+		{
+			"name": "find one item",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/:item_id/item",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						":item_id",
+						"item"
+					],
+					"variable": [
+						{
+							"key": "item_id",
+							"value": "64e386ec0ddcb727ecad9724"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "200 - ok",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/:item_id/item",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								":item_id",
+								"item"
+							],
+							"variable": [
+								{
+									"key": "item_id",
+									"value": "64e386ec0ddcb727ecad9724"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "content-type",
+							"value": "application/json"
+						},
+						{
+							"key": "content-length",
+							"value": "118"
+						},
+						{
+							"key": "date",
+							"value": "Mon, 21 Aug 2023 18:11:16 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"_id\": \"64e386ec0ddcb727ecad9724\",\n    \"name\": \"Elven Bow\",\n    \"description\": \"Bow\",\n    \"damage\": 90,\n    \"level_required\": 25,\n    \"price\": 1200\n}"
+				}
+			]
+		},
+		{
+			"name": "insert item",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Thunder Hammer\",\r\n    \"description\": \"One-Handed Hammer\",\r\n    \"damage\": 190,\r\n    \"level_required\": 35,\r\n    \"price\": 1900\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/item",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"item"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "201 - created",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Thunder Hammer\",\r\n    \"description\": \"One-Handed Hammer\",\r\n    \"damage\": 190,\r\n    \"level_required\": 35,\r\n    \"price\": 1900\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/item",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"item"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "content-type",
+							"value": "application/json"
+						},
+						{
+							"key": "content-length",
+							"value": "138"
+						},
+						{
+							"key": "date",
+							"value": "Mon, 21 Aug 2023 19:40:35 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"_id\": \"64e3bdb308f40771b1ff8e21\",\n    \"name\": \"Thunder Hammer\",\n    \"description\": \"One-Handed Hammer\",\n    \"damage\": 190,\n    \"level_required\": 35,\n    \"price\": 1900\n}"
+				}
+			]
+		},
+		{
+			"name": "update item",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Thunder Hammer\",\r\n    \"description\": \"One-Handed Hammer\",\r\n    \"damage\": 190,\r\n    \"level_required\": 35,\r\n    \"price\": 1900\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/:item_id/item",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						":item_id",
+						"item"
+					],
+					"variable": [
+						{
+							"key": "item_id",
+							"value": "64e386ec0ddcb727ecad9726"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "200 - ok",
+					"originalRequest": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Thunder Hammer\",\r\n    \"description\": \"One-Handed Hammer\",\r\n    \"damage\": 190,\r\n    \"level_required\": 35,\r\n    \"price\": 1900\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/:item_id/item",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								":item_id",
+								"item"
+							],
+							"variable": [
+								{
+									"key": "item_id",
+									"value": "64e386ec0ddcb727ecad9726"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "content-type",
+							"value": "application/json"
+						},
+						{
+							"key": "content-length",
+							"value": "138"
+						},
+						{
+							"key": "date",
+							"value": "Tue, 22 Aug 2023 06:53:51 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"_id\": \"64e386ec0ddcb727ecad9726\",\n    \"name\": \"Thunder Hammer\",\n    \"description\": \"One-Handed Hammer\",\n    \"damage\": 190,\n    \"level_required\": 35,\n    \"price\": 1900\n}"
+				}
+			]
+		},
+		{
+			"name": "delete one item",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/:item_id/item",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						":item_id",
+						"item"
+					],
+					"variable": [
+						{
+							"key": "item_id",
+							"value": "64e3bdb308f40771b1ff8e21"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "200 - ok",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/:item_id/item",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								":item_id",
+								"item"
+							],
+							"variable": [
+								{
+									"key": "item_id",
+									"value": "64e3bdb308f40771b1ff8e21"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "content-type",
+							"value": "application/json"
+						},
+						{
+							"key": "content-length",
+							"value": "30"
+						},
+						{
+							"key": "date",
+							"value": "Tue, 22 Aug 2023 06:18:09 GMT"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"deletedCount\": 1\n}"
+				}
+			]
+		}
+	]
+}
