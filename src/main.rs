@@ -29,7 +29,7 @@ async fn main() {
         })).layer(
             CorsLayer::new()
                 .allow_origin(Origin::exact(
-                    "http://localhost:5005".parse().unwrap(),
+                    "*".parse().unwrap(),
                 ))
                 .allow_methods(
                     [

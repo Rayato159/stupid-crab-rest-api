@@ -10,25 +10,19 @@ fn main() {
 }
 ```
 
-<h2>🐳 Start MongoDb on Docker</h2>
+<h2>🐳 Start Project on Docker Compose</h2>
 
-<p>Pull image and run the container</p>
-
-```bash
-docker pull mongo:latest
-```
+<p>Start app</p>
 
 ```bash
-docker run --name crab-db -e MONGO_INITDB_ROOT_USERNAME=root -e MONGO_INITDB_ROOT_PASSWORD=123456 -p 27017:27017 -d mongo
+docker compose up -d
 ```
 
-<p>Using mongoshell</p>
+<p>Insert mock data into the database</p>
 
 ```bash
-docker exec -it crab-db bash
+docker exec -it stupid-crab-api-db bash
 ```
-
-<p>Creating a database</p>
 
 ```bash
 mongosh mongodb://root:123456@0.0.0.0:27017
@@ -76,10 +70,4 @@ db.items.insertMany([
     "price": 1000
   }
 ])
-```
-
-<h2>Start Project with Cargo</h2>
-
-```bash
-cargo run
 ```
