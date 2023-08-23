@@ -2,7 +2,7 @@ use mongodb::{Database, options::ClientOptions, Client};
 
 pub async fn dbconnect() -> mongodb::error::Result<Database> {
     // Parse a connection string into an options struct.
-    let mut client_options = ClientOptions::parse("mongodb://root:123456@db:27017").await?;
+    let mut client_options = ClientOptions::parse("mongodb://root:123456@localhost:27017").await?;
 
     // Manually set an option.
     client_options.app_name = Some("My App".to_string());

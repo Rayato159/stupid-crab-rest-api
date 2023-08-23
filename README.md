@@ -1,8 +1,8 @@
 <h1>Stupid 🦀 CRUD using Axum</h1>
 
-<p>I just practice a Rust for the reason of Golang boring. I need more challenging in my backend developer career path.</p>
+<p>I just practice a Rust for the reason of Golang is too boring. I need somthing that more challenging in my life.</p>
 
-<p>Therefore, I've made this project. Just a stupid project but have made me proud.</p>
+<p>Thus, I've made this project. Just a stupid project but not stupid.</p>
 
 ```rust
 fn main() {
